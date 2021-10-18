@@ -1,1 +1,1 @@
-# Robotic_comp
+# Robot Design and Competition
