@@ -1,9 +1,0 @@
-#VRML_OBJ R2021a utf8
-RectangleArena {
-  translation 0 0 -0.01
-  floorSize 4.9 2.45
-  floorAppearance Parquetry {
-    type "dark strip"
-    colorOverride 0 0 0
-  }
-}
