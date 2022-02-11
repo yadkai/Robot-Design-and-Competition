@@ -36,65 +36,15 @@ double ps_rightValue;
 int walldetected;
 
 double previous_error=0.0;
-double kp=6; //5
-double kd=2; //0.5
+double kp=5; //5
+double kd=0.5; //0.5
 double ki=0;
-double Integral=0.3; 
+double Integral=0.0; 
 
 // robot physical parameters
 float robot_width=0.101;
 float wheel_radius= 0.031;
 float n=((robot_width/wheel_radius)/2*3.14159265358979323846); 
-
-
-void getReading(){
-    for (int i = 0; i < 5; i++) {
-      if (ds[i]->getValue() < 512){ //512
-        reading[i]=0;
-        std::cout << "values = "<<ds[i]->getValue()<<std::endl;
-        }
-      else{
-        reading[i]=1;}
-      }
-      return;    
-}  
-
-double PID(){
-    double error = 0.0;
-    int coefficient[5]= {-2000,-1000,0,1000,2000};
- 
-    for (int i = 0; i < 5; i++) {
-      error += coefficient[i]*reading[i];
-      } 
-    double P = kp*error;
-    double I = Integral+(ki*error);
-    double D = kd*(error-previous_error);
-    
-    double correction = (P+I+D)/1000;
-    double l_speed = 10+correction;
-    double r_speed = 10-correction;
-    
-    if (l_speed<0.0)  {l_speed=0;}
-    if (l_speed>10.0) {l_speed=10.0;}
-    if (r_speed<0.0)  {r_speed=0;}
-    if (r_speed>10.0) {r_speed=10.0;}
-    
-    leftMotor->setVelocity(l_speed);
-    rightMotor->setVelocity(r_speed);
-    //std::cout << "l_speed,r_speed" <<l_speed<<" "<<r_speed<<std::endl;
-    
-    int sum = 0;
-    for (int i = 0; i < 5; i++) {
-        sum = sum + reading[i];
-        }
-        
-    Integral = I;
-    previous_error = error;
-    //std::cout << "Integral, previous_error" <<I<<"  "<<error<<std::endl;
-  
-    return 0;
-  
-  }
 
 void turn_90(int dir){
      
@@ -157,8 +107,69 @@ void WallFollowingModule(void)
   }
 }
 
+void getReading(){
+    for (int i = 0; i < 5; i++) {
+      if (ds[i]->getValue() < 512){ //512
+        reading[i]=0;
+        std::cout << "values = "<<ds[i]->getValue()<<std::endl;
+        }
+      else{
+        reading[i]=1;}
+      }
+      return;    
+}  
+
+double PID(){
+    double error = 0.0;
+    int coefficient[5]= {-2000,-1000,0,1000,2000};
+ 
+    for (int i = 0; i < 5; i++) {
+      error += coefficient[i]*reading[i];
+      } 
+    double P = kp*error;
+    double I = Integral+(ki*error);
+    double D = kd*(error-previous_error);
+    
+    double correction = (P+I+D)/1000;
+    double l_speed = 10+correction;
+    double r_speed = 10-correction;
+    
+    if (l_speed<0.0)  {l_speed=0;}
+    if (l_speed>10.0) {l_speed=10.0;}
+    if (r_speed<0.0)  {r_speed=0;}
+    if (r_speed>10.0) {r_speed=10.0;}
+    
+    leftMotor->setVelocity(l_speed);
+    rightMotor->setVelocity(r_speed);
+    //std::cout << "l_speed,r_speed" <<l_speed<<" "<<r_speed<<std::endl;
+    
+    int sum = 0;
+    for (int i = 0; i < 5; i++) {
+        sum = sum + reading[i];
+        }
+        
+    if (sum==5){
+      WallFollowingModule();
+      //leftMotor->setVelocity(0.0);
+      //rightMotor->setVelocity(0.0);
+    }    
+        
+    Integral = I;
+    previous_error = error;
+    //std::cout << "Integral, previous_error" <<I<<"  "<<error<<std::endl;
+  
+    return 0;
+  
+  }
+
+
+
 int main(int argc, char **argv) {
 
+ for (int i = 0; i < 5; i++) {
+    ds[i] = robot->getDistanceSensor(dsNames[i]);
+    ds[i]->enable(TIME_STEP);
+  }
  
   walldetected = 0;
   leftMotor->setPosition(INFINITY);
@@ -171,8 +182,8 @@ int main(int argc, char **argv) {
   ps_left->enable(TIME_STEP);
   ps_right->enable(TIME_STEP);
   
-  leftPs->enable (TIME_STEP);
-  rightPs->enable (TIME_STEP);
+  leftPs->enable(TIME_STEP);
+  rightPs->enable(TIME_STEP);
  
     
   while (robot->step(TIME_STEP) != -1) {

@@ -18,9 +18,9 @@ char dsNames[5][10] = {"IR_3","IR_4","IR_C","IR_5","IR_6"};
 int reading[5] ={0,0,0,0,0};
   
 double previous_error=0.0;
-double kp=6; //5
-double kd=1; //0.5
-double ki=0;
+double kp=5; //5
+double kd=0.5; //0.5
+double ki=0.0;
 double Integral=0.0; 
 
 
@@ -34,7 +34,7 @@ void getReading(){
         reading[i]=1;}
       }
       for (int i = 0; i < 5; i++) {
-      std::cout << "values = "<<ds[i]->getValue()<<std::endl;
+      std::cout <<reading[i]<<std::endl;
       
       }
       
@@ -73,10 +73,10 @@ double PID(){
         }
     //std::cout << "Sum = " <<sum<<std::endl;
     
-   /*if (sum==5){
+   if (sum==5){
       leftMotor->setVelocity(0.0);
       rightMotor->setVelocity(0.0);
-    }*/
+    }
     
     
     Integral = I;
