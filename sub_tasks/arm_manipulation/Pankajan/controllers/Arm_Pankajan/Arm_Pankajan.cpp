@@ -235,34 +235,37 @@ void gripper(int stat){
   
   if(stat == 1){
 
-  grip_r_motor->setPosition(M_PI/2);
-  grip_l_motor->setPosition(-M_PI/2);
+
   
   if((Finger_right_angle != M_PI/2) && (Finger_left_angle != -M_PI/2)){
   
+  grip_r_motor->setPosition(M_PI/2);
+  grip_l_motor->setPosition(-M_PI/2);
   arm_in_movement = 1;
   
   }
-  else if((Finger_right_angle = M_PI/2) && (Finger_left_angle = -M_PI/2)){
+  else if((Finger_right_angle == M_PI/2) && (Finger_left_angle == -M_PI/2)){
   
   arm_in_movement = 0;
-  
   Finger_right_angle = 0;
   Finger_left_angle = 0;
   step=step+1;
   }
   }
+  
+  
   else if(stat == 0){
   
-  grip_r_motor->setPosition(0.01);
-  grip_l_motor->setPosition(-0.01);
+
   
-  if((Finger_right_angle != 0.01) && (Finger_left_angle != -0.01)){
+  if((Finger_right_angle != 0) && (Finger_left_angle != 0)){
   
+  grip_r_motor->setPosition(0);
+  grip_l_motor->setPosition(0);
   arm_in_movement = 1;
   
   }
-  else if((Finger_right_angle == 0.01) && (Finger_left_angle == -0.01)){
+  else if((Finger_right_angle == 0) && (Finger_left_angle == 0)){
   
   arm_in_movement = 0;
   
@@ -273,7 +276,7 @@ void gripper(int stat){
   }
   
   
-
+std::cout << "Reached "  << std::endl;
 }
 
 void arm_move(double x, double y, double z){
@@ -316,6 +319,7 @@ if(step ==0){
  }
  
  if(step ==2){
+ std::cout << "Reached "  << std::endl;
  arm_move(x,5,z);
  }
  if(step==3){
