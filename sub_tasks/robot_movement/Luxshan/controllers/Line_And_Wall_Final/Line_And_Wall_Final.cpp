@@ -44,7 +44,7 @@ double ki=0.0;
 double Integral=0.0; 
 
 // robot physical parameters
-float robot_width=0.101;
+float robot_width=0.115;//0.101
 float wheel_radius= 0.031;
 float n=((robot_width/wheel_radius)/2*3.14159265358979323846); 
 
