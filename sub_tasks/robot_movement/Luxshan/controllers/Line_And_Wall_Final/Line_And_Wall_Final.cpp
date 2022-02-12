@@ -149,9 +149,15 @@ double PID(){
         
     if (sum==5){
       WallFollowingModule();
-      //leftMotor->setVelocity(0.0);
-      //rightMotor->setVelocity(0.0);
-    }    
+      
+    } 
+    
+    for (int i = 0; i < 5; i++) {
+     if ((ds[i]->getValue())>235 && (ds[i]->getValue())<242) {
+          leftMotor->setVelocity(0);
+          rightMotor->setVelocity(0);
+          //break;
+        }}    
         
     Integral = I;
     previous_error = error;

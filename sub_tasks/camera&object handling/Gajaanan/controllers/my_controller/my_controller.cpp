@@ -12,6 +12,7 @@ using namespace webots;
 #define wheel_radius 0.031   
 double turn_90time = 3.14*(robot_width/2)/(MAX_SPEED*wheel_radius); 
 */
+
 Robot *robot = new Robot();
 int TIME_STEP = 32;
   
@@ -88,6 +89,8 @@ float robot_width=0.115;
 float wheel_radius= 0.031;
 float n=((robot_width/wheel_radius)/2*3.14159265358979323846); 
 
+double fronttime = 3.14*(robot_width)*2; 
+
 void turn_90(int dir){
      
     double lpsn = leftPs->getValue();
@@ -114,6 +117,22 @@ void turn_90(int dir){
            break;
          }       
        }
+}
+
+void movefront(){
+    double time = robot->getTime()+fronttime;
+    double current_time=0;
+     
+     while (robot->step(TIME_STEP) != -1) {
+          current_time = robot->getTime();
+          if (time>current_time){
+               leftMotor->setVelocity(5.0);
+               rightMotor->setVelocity(5.0);}
+          else{
+          leftMotor->setVelocity(0.0);
+          rightMotor->setVelocity(0.0);
+               break;}
+     }
 }
 /*
 void turn90(){
@@ -161,9 +180,15 @@ int main(int argc, char **argv) {
     leftMotor->setVelocity(10.0);
     rightMotor->setVelocity(10.0);
     
-    if (ps_frontValue<400){
+    if (ps_frontValue<450){
         leftMotor->setVelocity(0.0);
         rightMotor->setVelocity(0.0);
+    }
+    else if (ps_leftValue<900){
+         movefront();
+         leftMotor->setVelocity(0.0);
+          rightMotor->setVelocity(0.0);
+           turn_90(1);
     }
     
     //std::cout<<"color "<< colour_detecting()<<std::endl;
@@ -173,9 +198,16 @@ int main(int argc, char **argv) {
         turn_90(1);
          std::cout<<"color "<< colour_detecting()<<std::endl;
     }*/
-    
-     colour_detecting();
-    
+    /*
+     int a= colour_detecting();
+     std::cout<<"color "<<a<<std::endl;
+     if  ((leftPs->getValue()>18) && (rightPs->getValue()>18) && (a==6)){
+     turn_90(1);
+     }
+     else  if (a==4){
+     turn_90(-1);
+     }
+    */
     
     std::cout<<"wheel1 "<<leftPs->getValue()<<std::endl;
     std::cout<<"wheel2 "<<rightPs->getValue()<<std::endl;
