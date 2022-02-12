@@ -5,7 +5,7 @@
 #include <iostream>
 
 
-#define WFM_MAX_SPEED 7
+#define WFM_MAX_SPEED 7.25
 #define WFM_TURN_POWER 2.5
 #define WFM_WALL_DISTANCE 1.2
 using namespace webots;
@@ -37,8 +37,8 @@ int walldetected;
 
 double previous_error=0.0;
 double kp=5; //5
-double kd=0.5; //0.5
-double ki=0;
+double kd=0.9; //0.5
+double ki=0.0;
 double Integral=0.0; 
 
 // robot physical parameters
@@ -81,7 +81,7 @@ void WallFollowingModule(void)
   std::cout<<"ps_leftValue: "<<ps_leftValue<<std::endl; 
   std::cout<<"ps_rightValue: "<<ps_rightValue<<std::endl;   
   std::cout<<"WALL DETECT: "<<walldetected<<std::endl; 
-  //  Move forward until we are 90 cm away from the wall.
+  
   if (walldetected == 0)
   {
     if (ps_frontValue < 1.3)
