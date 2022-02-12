@@ -84,7 +84,7 @@ void WallFollowingModule(void)
   
   if (walldetected == 0)
   {
-    if (ps_frontValue < 1.3)
+    if (ps_frontValue < 1.4)
     {
        leftMotor->setVelocity(WFM_MAX_SPEED);
        rightMotor->setVelocity(WFM_MAX_SPEED);
@@ -95,12 +95,12 @@ void WallFollowingModule(void)
       turn_90(1);
     }
   }
-  else if (ps_frontValue < 1.3)
+  else if (ps_frontValue < 1.4)
   { 
     leftMotor->setVelocity(WFM_MAX_SPEED + WFM_TURN_POWER * ((ps_rightValue - WFM_WALL_DISTANCE) + 0.5 * (ps_rightValue - WFM_WALL_DISTANCE)));
     rightMotor->setVelocity(WFM_MAX_SPEED - WFM_TURN_POWER * ((ps_rightValue - WFM_WALL_DISTANCE) + 0.5 * (ps_rightValue - WFM_WALL_DISTANCE)));
   }
-    else if (ps_frontValue > 1.3)
+    else if (ps_frontValue > 1.4)
   {
      turn_90(1);
      //move_forward(15);
