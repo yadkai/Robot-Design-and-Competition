@@ -60,15 +60,26 @@ int colour_detecting(){
                   blue += camera_s->imageGetBlue(image, width, i, j);
                   green += camera_s->imageGetGreen(image, width, i, j);
                 }}
-           camera_s->disable();
+                
+           std::cout<<"colorred "<< red <<std::endl;
+           std::cout<<"colorblue "<< blue <<std::endl;
+           std::cout<<"colorgreen "<< green <<std::endl;
+           //camera_s->disable();
            if (red>(blue+green)){
-               colour_num = 1;}
+               colour_num = 1;}//red
            else if(blue>(red+green)){
-               colour_num = 3;}
+               colour_num = 3;}//blue
            else if(green>(blue+red)){
-               colour_num = 2; }
+               colour_num = 2;}//green
+           else if ((red>50000) && (green>50000) && (blue<20000)){
+               colour_num = 4;} // yellow color
+           else if((red>50000) && (blue>50000) && (green<20000)){
+               colour_num = 5;}  // magenta
+           else if((blue>50000) && (green>50000) && (red<20000)){
+               colour_num = 6;}  //cyan
                
-           camera_s->disable();
+           //camera_s->disable();
+           std::cout<<"colornum "<< colour_num <<std::endl;
            return colour_num;
    }  
  
@@ -155,13 +166,15 @@ int main(int argc, char **argv) {
         rightMotor->setVelocity(0.0);
     }
     
-    std::cout<<"color "<< colour_detecting()<<std::endl;
-    
+    //std::cout<<"color "<< colour_detecting()<<std::endl;
+    /*
     if ((leftPs->getValue()>20) && (rightPs->getValue()>20)){
+ 
         turn_90(1);
-         break;
-    }
+         std::cout<<"color "<< colour_detecting()<<std::endl;
+    }*/
     
+     colour_detecting();
     
     
     std::cout<<"wheel1 "<<leftPs->getValue()<<std::endl;
