@@ -6,13 +6,12 @@
 #include <webots/Camera.hpp>
 
 using namespace webots;
-
+/*
 #define MAX_SPEED 5     
 #define robot_width 0.11 
 #define wheel_radius 0.031   
-
 double turn_90time = 3.14*(robot_width/2)/(MAX_SPEED*wheel_radius); 
-
+*/
 Robot *robot = new Robot();
 int TIME_STEP = 32;
   
@@ -38,7 +37,7 @@ int colour_detecting(){
       Camera *camera_s = robot->getCamera("CAM");
       camera_s->enable(TIME_STEP);
       camera_s ->recognitionEnable(TIME_STEP);
-      int number_of_objects = getRecognitionNumberOfObjects(camera_s) const;
+      /*int number_of_objects = getRecognitionNumberOfObjects(camera_s) const;
       const CameraRecognitionObject *objects = getRecognitionObjects(camera_s) const;
       
       for (int i = 0; i < number_of_objects; ++i) {
@@ -47,7 +46,7 @@ int colour_detecting(){
         std::cout<<(objects[i].orientation[0], objects[i].orientation[1], objects[i].orientation[2], objects[i].orientation[3])<<std::endl;
         std::cout<<(objects[i].size[0], objects[i].size[1])<<std::endl;
       }
-      
+      */
       
       const int width = camera_s->getWidth();
       const int height = camera_s->getHeight();
@@ -72,7 +71,40 @@ int colour_detecting(){
            camera_s->disable();
            return colour_num;
    }  
+ 
+// robot physical parameters
+float robot_width=0.115;
+float wheel_radius= 0.031;
+float n=((robot_width/wheel_radius)/2*3.14159265358979323846); 
 
+void turn_90(int dir){
+     
+    double lpsn = leftPs->getValue();
+    double rpsn = rightPs->getValue();
+    
+    int r_s,l_s;
+    
+    if(dir==1){ r_s=-5; l_s=5;}
+    else{ r_s=5; l_s=-5;}
+    
+    
+    
+    while(robot->step(TIME_STEP) != -1){
+        
+        double leftPsVal = leftPs->getValue ();
+        double rightPsVal = rightPs->getValue ();
+        
+        if((leftPsVal-lpsn < n) && ((rightPsVal-rpsn) < n)){
+          leftMotor->setVelocity(l_s);
+          rightMotor->setVelocity(r_s);}
+         else{
+           leftMotor->setVelocity(0);
+           rightMotor->setVelocity(0);
+           break;
+         }       
+       }
+}
+/*
 void turn90(){
     double time = robot->getTime()+turn_90time;
     double current_time=0;
@@ -88,7 +120,7 @@ void turn90(){
                break;}
      }
 }
-
+*/
 
 int main(int argc, char **argv) {
 
@@ -124,11 +156,11 @@ int main(int argc, char **argv) {
     }
     
     std::cout<<"color "<< colour_detecting()<<std::endl;
-    /*
+    
     if ((leftPs->getValue()>20) && (rightPs->getValue()>20)){
-        turn90();
+        turn_90(1);
          break;
-    }*/
+    }
     
     
     
