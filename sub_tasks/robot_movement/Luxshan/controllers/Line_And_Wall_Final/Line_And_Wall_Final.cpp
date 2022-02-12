@@ -5,10 +5,12 @@
 #include <iostream>
 
 
-#define WFM_MAX_SPEED 7.25
+#define WFM_MAX_SPEED 7 
 #define WFM_TURN_POWER 2.5
-#define WFM_WALL_DISTANCE 1.2
+#define WFM_WALL_DISTANCE 1.15
 using namespace webots;
+// 7.25 2.5 1.2
+
 
 Robot *robot = new Robot();
 int TIME_STEP = 32;
@@ -42,7 +44,7 @@ double ki=0.0;
 double Integral=0.0; 
 
 // robot physical parameters
-float robot_width=0.101;
+float robot_width=0.115;//0.101
 float wheel_radius= 0.031;
 float n=((robot_width/wheel_radius)/2*3.14159265358979323846); 
 
@@ -55,8 +57,6 @@ void turn_90(int dir){
     
     if(dir==1){ r_s=-5; l_s=5;}
     else{ r_s=5; l_s=-5;}
-    
-    
     
     while(robot->step(TIME_STEP) != -1){
         
@@ -77,14 +77,14 @@ void turn_90(int dir){
 void WallFollowingModule(void)
 {
     
-  std::cout<<"ps_frontValue: "<<ps_frontValue<<std::endl; 
-  std::cout<<"ps_leftValue: "<<ps_leftValue<<std::endl; 
-  std::cout<<"ps_rightValue: "<<ps_rightValue<<std::endl;   
-  std::cout<<"WALL DETECT: "<<walldetected<<std::endl; 
+  //std::cout<<"ps_frontValue: "<<ps_frontValue<<std::endl; 
+  //std::cout<<"ps_leftValue: "<<ps_leftValue<<std::endl; 
+  //std::cout<<"ps_rightValue: "<<ps_rightValue<<std::endl;   
+  //std::cout<<"WALL DETECT: "<<walldetected<<std::endl; 
   
   if (walldetected == 0)
   {
-    if (ps_frontValue < 1.4)
+    if (ps_frontValue < 1.1)//1.3
     {
        leftMotor->setVelocity(WFM_MAX_SPEED);
        rightMotor->setVelocity(WFM_MAX_SPEED);
@@ -95,15 +95,14 @@ void WallFollowingModule(void)
       turn_90(1);
     }
   }
-  else if (ps_frontValue < 1.4)
+  else if (ps_frontValue < 1.1)
   { 
     leftMotor->setVelocity(WFM_MAX_SPEED + WFM_TURN_POWER * ((ps_rightValue - WFM_WALL_DISTANCE) + 0.5 * (ps_rightValue - WFM_WALL_DISTANCE)));
     rightMotor->setVelocity(WFM_MAX_SPEED - WFM_TURN_POWER * ((ps_rightValue - WFM_WALL_DISTANCE) + 0.5 * (ps_rightValue - WFM_WALL_DISTANCE)));
   }
-    else if (ps_frontValue > 1.4)
+    else if (ps_frontValue > 1.1)
   {
      turn_90(1);
-     //move_forward(15);
   }
 }
 
@@ -111,7 +110,7 @@ void getReading(){
     for (int i = 0; i < 5; i++) {
       if (ds[i]->getValue() < 512){ //512
         reading[i]=0;
-        std::cout << "values = "<<ds[i]->getValue()<<std::endl;
+        //std::cout << "values = "<<ds[i]->getValue()<<std::endl;
         }
       else{
         reading[i]=1;}
