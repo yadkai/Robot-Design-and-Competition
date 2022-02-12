@@ -38,6 +38,17 @@ int colour_detecting(){
       Camera *camera_s = robot->getCamera("CAM");
       camera_s->enable(TIME_STEP);
       camera_s ->recognitionEnable(TIME_STEP);
+      int number_of_objects = getRecognitionNumberOfObjects(camera_s) const;
+      const CameraRecognitionObject *objects = getRecognitionObjects(camera_s) const;
+      
+      for (int i = 0; i < number_of_objects; ++i) {
+        std::cout<<objects[i].model<<std::endl;
+        std::cout<<(objects[i].position[0], objects[i].position[1], objects[i].position[2])<<std::endl;
+        std::cout<<(objects[i].orientation[0], objects[i].orientation[1], objects[i].orientation[2], objects[i].orientation[3])<<std::endl;
+        std::cout<<(objects[i].size[0], objects[i].size[1])<<std::endl;
+      }
+      
+      
       const int width = camera_s->getWidth();
       const int height = camera_s->getHeight();
      
