@@ -69,7 +69,7 @@ void gripper_control(int stat);
 void arm_move(double x, double y, double z);
 void arm_pick(double x, double z);
 void arm_place(double x, double z);
-
+void degree2radian(double angle);
 
 
 // This is the main program of your controller.
@@ -81,8 +81,8 @@ void arm_place(double x, double z);
 // "controllerArgs" field of the Robot node
 int main(int argc, char **argv) {
 
-  grip_r_motor->setVelocity(1);
-  grip_l_motor->setVelocity(1);
+  grip_r_motor->setVelocity(0.7);
+  grip_l_motor->setVelocity(0.7);
 
   
   
@@ -122,17 +122,18 @@ int main(int argc, char **argv) {
   //arm_pick(10,10,10)
   
   arm_pick(90,120);
+
   //arm_place(90,120);
   
   /*
   if(step == 0){
-  arm_move( 0, 0, 198);
+  arm_move( 10, 10, 198);
   }
   else if(step ==1){
   gripper(1);
   }
   else if(step ==2){
-  gripper(0);
+  arm_move(30,30,40);
   }
   else if(step ==3){
   gripper(1);
@@ -211,12 +212,7 @@ void arm_pick(double x, double y, double z){
   Trunk_motor->setPosition(Gamma);
 }
 */
-void gripper_control(int stat){
-  if(arm_in_movement == 0){
 
-  gripper(stat);
-}
-}
 
 
 
@@ -234,38 +230,44 @@ void gripper(int stat){
   */
   
   if(stat == 1){
-
-
-  
-  if((Finger_right_angle != M_PI/2) && (Finger_left_angle != -M_PI/2)){
-  
   grip_r_motor->setPosition(M_PI/2);
   grip_l_motor->setPosition(-M_PI/2);
-  arm_in_movement = 1;
+
+  if((Finger_right_angle < M_PI/4) && (Finger_left_angle > -M_PI/4)){
   
+  std::cout << "Reached "  <<Finger_right_angle<<" "<<Finger_left_angle<<" " <<M_PI/4<< std::endl;
+  arm_in_movement = 1;
+
   }
-  else if((Finger_right_angle == M_PI/2) && (Finger_left_angle == -M_PI/2)){
+  
+  
+  else{
   
   arm_in_movement = 0;
   Finger_right_angle = 0;
   Finger_left_angle = 0;
+  
   step=step+1;
+  
+  
   }
   }
   
   
   else if(stat == 0){
   
+  grip_r_motor->setPosition(0.01);
+  grip_l_motor->setPosition(0.1);
+  
+  if((Finger_right_angle >0.1001) && (Finger_left_angle < 0.1001)){
+  
 
-  
-  if((Finger_right_angle != 0) && (Finger_left_angle != 0)){
-  
-  grip_r_motor->setPosition(0);
-  grip_l_motor->setPosition(0);
   arm_in_movement = 1;
   
   }
-  else if((Finger_right_angle == 0) && (Finger_left_angle == 0)){
+  
+  
+  else{
   
   arm_in_movement = 0;
   
@@ -276,7 +278,7 @@ void gripper(int stat){
   }
   
   
-std::cout << "Reached "  << std::endl;
+//std::cout << "Reached "  << std::endl;
 }
 
 void arm_move(double x, double y, double z){
@@ -285,9 +287,9 @@ void arm_move(double x, double y, double z){
   Alpha = M_PI/2 - atan(y/sqrt(x*x + z*z)) - atan((a2*sin(Bheta)/(a1 + a2*cos(Bheta))));
   Gamma = M_PI - (Bheta+Alpha);
   
-  Shoulder_motor->setVelocity(1);
-  Elbow_motor->setVelocity(1);
-  Trunk_motor->setVelocity(1);
+  Shoulder_motor->setVelocity(0.5);
+  Elbow_motor->setVelocity(0.5);
+  Trunk_motor->setVelocity(0.5);
   
   Shoulder_motor->setPosition(Alpha);
   Elbow_motor->setPosition(Bheta);
@@ -311,23 +313,32 @@ void arm_move(double x, double y, double z){
 
 void arm_pick(double x, double z){
 if(step ==0){
-  arm_move(x,70,z);
+  arm_move(x,80,z);
  
  }
  if(step ==1){
  gripper(1);
+ 
  }
  
  if(step ==2){
  std::cout << "Reached "  << std::endl;
- arm_move(x,5,z);
+ arm_move(x,20,z);
  }
  if(step==3){
+
+ 
+ grip_r_motor->setAvailableTorque(10);
+ grip_l_motor->setAvailableTorque(10);
  gripper(0);
  }
  if(step==4){
- arm_move(x,70,z);
+ arm_move(x,50,z);
+ }
  //step=0;
+ 
+ if(step == 5){
+ arm_move(x,80,z);
  }
 }
 
@@ -351,3 +362,5 @@ if(step ==0){
  //step=0;
  }
 }
+
+
